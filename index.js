@@ -11,6 +11,10 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 
+
+
+
+
 mongoose.connect('mongodb://localhost/loginapp');
 var db = mongoose.connection;
 
@@ -26,7 +30,7 @@ app.engine('handlebars', exphbs({defaultLayout:'layout'}));
 app.set('view engine', 'handlebars');
 
 // BodyParser Middleware
-app.use(bodyParser.json());
+app.use(bodyParser.json({keepExtension: true}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
@@ -71,6 +75,7 @@ app.use(function (req, res, next) {
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
   res.locals.user = req.user || null;
+  res.locals.meme = "meme bros";
   next();
 });
 //

@@ -3,6 +3,9 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+var multer = require('multer');
+var upload = multer({dest: 'public/uploads/'});
+
 var User = require('../models/user');
 
 // Get Homepage
@@ -15,22 +18,22 @@ router.get('/login', function(req, res){
   res.render('login');
 });
 
-router.post('/register', function(req, res){
+router.post('/register', upload.any(), function(req, res){
   var name = req.body.name;
   var email = req.body.email;
   var username = req.body.username;
   var password = req.body.password;
   var password2 = req.body.password2;
+  var file = req.body.upload;
 
   //validation
-  req.checkBody('name', 'Name is required').notEmpty();
-  req.checkBody('email', 'Email is required').notEmpty();
-  req.checkBody('email', 'Email is not valid').isEmail();
-  req.checkBody('username', 'Username is required').notEmpty();
-  req.checkBody('password', 'Password is required').notEmpty();
-  req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
+  // req.checkBody('name', 'Name is required').notEmpty();
+  // req.checkBody('email', 'Email is required').notEmpty();
+  // req.checkBody('email', 'Email is not valid').isEmail();
+  // req.checkBody('username', 'Username is required').notEmpty();
+  // req.checkBody('password', 'Password is required').notEmpty();
+  // req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
-  console.log("meme");
 
   var errors = req.validationErrors();
 
@@ -43,16 +46,18 @@ router.post('/register', function(req, res){
         name: name,
         email: email,
         username: username,
-        password: password
+        password: password,
+        img: req.files[0].path
       });
 
       User.createUser(newUser, function(err, user){
         if (err) throw err;
         console.log(user);
       });
-
+      console.log(req.files);
+      // res.send(req.files);
       req.flash('success_msg', 'You are registered and can now login');
-      res.redirect('/users/login');
+      res.redirect('/users/login').send(req.files);
   }
 });
 

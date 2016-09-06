@@ -1,8 +1,10 @@
 var mongoose = require('mongoose');
+
 var bcrypt = require('bcryptjs');
 
 // User Schema
 var UserSchema = mongoose.Schema({
+	_id: Number,
 	username: {
 		type: String,
 		index:true
@@ -14,6 +16,9 @@ var UserSchema = mongoose.Schema({
 		type: String
 	},
 	name: {
+		type: String
+	},
+	imgpath: {
 		type: String
 	}
 });
