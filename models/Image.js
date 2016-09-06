@@ -14,4 +14,8 @@ var ImageSchema = mongoose.Schema({
 	}
 });
 
-var Image = mongoose.model('Image', ImageSchema);
+var Image = module.exports = mongoose.model('Image', ImageSchema);
+
+module.exports.createImage = function(newImage, callback){
+	        newImage.save(callback);
+};

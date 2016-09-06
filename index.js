@@ -10,6 +10,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
+var fs = require('fs');
 
 
 
@@ -20,6 +21,7 @@ var db = mongoose.connection;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var image = require('./routes/image');
 //
 // Init App
 var app = express();
@@ -83,6 +85,16 @@ app.use(function (req, res, next) {
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/image', image);
+
+//
+app.get('/image/:id', function (req, res) {
+  // Validate that req.params.id is 16 bytes hex string
+  // Get the stored image type for this image
+  res.setHeader('Content-Type', storedMimeType);
+  fs.createReadStream(path.join(UPLOAD_PATH, req.params.id)).pipe(res);
+});
+
 
 // Set Port
 app.set('port', (process.env.PORT || 3001));
