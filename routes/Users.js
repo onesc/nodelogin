@@ -21,7 +21,8 @@ router.post('/register', function(req, res){
   var username = req.body.username;
   var password = req.body.password;
   var password2 = req.body.password2;
-  // validation
+
+  //validation
   req.checkBody('name', 'Name is required').notEmpty();
   req.checkBody('email', 'Email is required').notEmpty();
   req.checkBody('email', 'Email is not valid').isEmail();
@@ -41,13 +42,14 @@ router.post('/register', function(req, res){
         name: name,
         email: email,
         username: username,
-        password: password,
+        password: password
       });
 
       User.createUser(newUser, function(err, user){
         if (err) throw err;
         console.log(user);
       });
+
       req.flash('success_msg', 'You are registered and can now login');
       res.redirect('/users/login');
   }

@@ -76,20 +76,10 @@ app.use(function (req, res, next) {
   next();
 });
 //
-//
 
 app.use('/', routes);
 app.use('/users', users);
 app.use('/image', image);
-
-//
-app.get('/image/:id', function (req, res) {
-  // Validate that req.params.id is 16 bytes hex string
-  // Get the stored image type for this image
-  res.setHeader('Content-Type', storedMimeType);
-  fs.createReadStream(path.join(UPLOAD_PATH, req.params.id)).pipe(res);
-});
-
 
 // Set Port
 app.set('port', (process.env.PORT || 3001));

@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'), Schema = mongoose.Schema;
 
 var ImageSchema = mongoose.Schema({
 	path: {
@@ -8,8 +8,8 @@ var ImageSchema = mongoose.Schema({
 	imagetype: {
 		type: String
 	},
-	_artist: {
-		type: Number,
+	artistid: {
+		type: Schema.Types.ObjectId,
     ref: 'User'
 	}
 });
@@ -19,3 +19,6 @@ var Image = module.exports = mongoose.model('Image', ImageSchema);
 module.exports.createImage = function(newImage, callback){
 	        newImage.save(callback);
 };
+
+// artid = db.images.find()[3].artistid
+// db.users.find({_id: artid})
