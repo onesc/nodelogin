@@ -11,16 +11,15 @@ var storage = multer.diskStorage({
   }
 });
 var upload = multer({ storage: storage });
+
 var Image = require('../models/Image');
 
-// Routes
-router.get('/', function(req, res){
-  res.render('image');
-  console.log(req.res.locals.user);
-  console.log(req.data);
-  console.log(res.locals.user);
+router.get('/',function(req, res){
+  var memes = Image.getUsersImages(res.locals.user._id, function(paths){
+    res.locals.paths = paths;
+    res.render('myimages');
+  });
 });
-
 
 
 router.post('/uploadimage', upload.any(), function(req, res){
@@ -48,7 +47,7 @@ router.post('/uploadimage', upload.any(), function(req, res){
       });
   } else {
       var newImage = new Image ({
-        path: req.files[0].path,
+        path: req.files[0].path.replace(/public/g,''),
         imagetype: req.files[0].mimetype,
         artistid: res.locals.user._id
       });

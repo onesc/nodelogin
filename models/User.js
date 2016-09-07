@@ -1,4 +1,4 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'), Schema = mongoose.Schema;
 
 var bcrypt = require('bcryptjs');
 
@@ -19,7 +19,8 @@ var UserSchema = mongoose.Schema({
 	},
 	imgpath: {
 		type: String
-	}
+	},
+  images: [{ type: Schema.Types.ObjectId, ref: 'Image' }]
 });
 
 var User = module.exports = mongoose.model('User', UserSchema);

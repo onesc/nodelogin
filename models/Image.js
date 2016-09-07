@@ -20,5 +20,14 @@ module.exports.createImage = function(newImage, callback){
 	        newImage.save(callback);
 };
 
-// artid = db.images.find()[3].artistid
-// db.users.find({_id: artid})
+module.exports.getUsersImages = function(idpassed, callback){
+  mypic = Image.find({artistid: idpassed}).exec(function (err, image) {
+    if (err) return handleError(err);
+    var imagepaths = [];
+    image.forEach(function(i){
+      imagepaths.push(i.path);
+    });
+    callback(imagepaths);
+  });
+
+};

@@ -9,10 +9,11 @@ var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongo = require('mongodb');
-var mongoose = require('mongoose');
+var mongoose = require('mongoose', autoIncrement = require('mongoose-auto-increment'));
 
 mongoose.connect('mongodb://localhost/loginapp');
 var db = mongoose.connection;
+autoIncrement.initialize(db);
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
