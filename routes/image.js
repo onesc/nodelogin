@@ -10,7 +10,16 @@ var storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + Date.now() + imagetype);
   }
 });
-var upload = multer({ storage: storage });
+
+var upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype !== 'image/png') {
+         return cb(null, false, new Error('I don\'t have a clue!'));
+       }
+       cb(null, true);
+     }
+});
 
 var Image = require('../models/Image');
 
@@ -40,11 +49,19 @@ router.post('/uploadimage', upload.any(), function(req, res){
   // // req.checkBody('password', 'Password is required').notEmpty();
   // // req.checykBody('password2', 'Passwords do not match').equals(req.body.password);
   var errors = req.validationErrors();
+  var fileinvalid = false;
+  console.log("meme");
+  console.log("meme");
+  console.log(req.files[0]);
+  //
+  // if((req.files[0].mimetype === "image/png") || (req.files[0].mimetype === "image/jpeg" || (req.files[0].mimetype === "image/gif"))) {
+  //   console.log("validated the file");
+  //   console.log("validated the file");
+  //   fileinvalid = false;
+  // }
 
-  if(errors){
-      res.render('register', {
-        errors: errors
-      });
+  if(errors || !req.files[0]){
+      res.redirect('/image');
   } else {
       var newImage = new Image ({
         path: req.files[0].path.replace(/public/g,''),
@@ -56,8 +73,7 @@ router.post('/uploadimage', upload.any(), function(req, res){
         if (err) throw err;
         console.log(user);
       });
-      console.log(req.files);
-      // res.send(req.files);
+
       req.flash('success_msg', 'Your image uploaded successfully');
       res.redirect('/image').send(req.files);
   }
