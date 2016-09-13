@@ -1,0 +1,31 @@
+<h2 class="page-header">Edit Painting</h2>
+{{#if errors}}
+      {{#each errors}}
+        <div class="alert alert-danger">{{msg}}</div>
+      {{/each}}
+{{/if}}
+
+<form method="post" enctype="multipart/form-data" action="/paintings/edit">
+   <div class="form-group">
+    <label>Title</label>
+    <input type="text" class="form-control" value="{{painting.title}}" name="title">
+  </div>
+  <div class="form-group">
+    <label>Price </label>
+    $ <input type="number" class="form-control" value="{{painting.price}}" name="price">
+  </div>
+   <div class="form-group">
+    <label>Description</label>
+    <input type="text" class="form-control" value="{{painting.description}}" name="description">
+  </div>
+  <div class="form-group">
+    <label>In Stock</label>
+    <input type="checkbox" class="form-control" value="stocked" name="stocked">
+  </div>
+  <div class="form-group">
+    <label>Image</label>
+  <input type="file" class="form-control" value={{painting.imagepath}} name="upload">
+  <input type="hidden" name="id" value="{{painting.id}}">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>

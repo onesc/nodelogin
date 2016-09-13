@@ -38,16 +38,17 @@ module.exports.deletePainting = function(Painting, callback){
 };
 
 module.exports.getPainting = function(paintingid, callback){
-				
 				var painting =	Painting.find({_id: paintingid}).exec(function (err, image) {
 			    if (err) return handleError(err);
-			    // var imagepaths = [];
-			    // image.forEach(function(i){
-			    //   imagepaths.push(i.path);
-			    // });
 			    callback(image);
 			  });
+};
 
+module.exports.updatePainting = function(paintingid, paintingupdate, callback){
+	var painting =	Painting.findByIdAndUpdate(paintingid, {$set:paintingupdate}).exec(function (err, image) {
+		if (err) return handleError(err);
+		callback();
+	});
 };
 //
 // module.exports.getUsersImages = function(idpassed, callback){

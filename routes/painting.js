@@ -33,12 +33,37 @@ router.get('/upload',function(req, res){
 
 router.get('/:id', function(req, res){
   var painting = Painting.getPainting(req.params.id, function(image){
-    res.send(image);
+    res.locals.painting = image[0];
     console.log(image);
-    return image;
+    // console.log(res.locals.painting);
+    res.render('editpainting');
   });
+});
+
+router.post('/edit', upload.any(), function(req, res){
+  var title = req.body.title;
+  var price = req.body.price;
+  var stocked = req.body.stocked;
+  var description = req.body.description;
+  var file = req.body.upload;
+  var id = req.body.id;
 
 
+  var errors = req.validationErrors();
+
+  if(errors){
+        res.redirect('/upload');
+    } else {
+        paintingParams = {title: title, price: price, description: description};
+
+        Painting.updatePainting(id, paintingParams, function(err, painting){
+          if (err) throw err;
+          // console.log(painting);
+        });
+        req.flash('success_msg', 'You successfully edited the image');
+        res.redirect('/paintings/' + id);
+  }
+  
 });
 
 router.post('/upload', upload.any(), function(req, res){
@@ -47,6 +72,7 @@ router.post('/upload', upload.any(), function(req, res){
     var stocked = req.body.stocked;
     var description = req.body.description;
     var file = req.body.upload;
+
     console.log(file);
 
 
