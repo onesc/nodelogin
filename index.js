@@ -18,6 +18,7 @@ autoIncrement.initialize(db);
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var image = require('./routes/image');
+var painting = require('./routes/painting');
 //
 // Init App
 var app = express();
@@ -81,10 +82,13 @@ app.use(function (req, res, next) {
 app.use('/', routes);
 app.use('/users', users);
 app.use('/image', image);
+app.use('/paintings', painting);
 
 // Set Port
 app.set('port', (process.env.PORT || 3001));
 
 app.listen(app.get('port'), function(){
-	console.log('Server started on port '+app.get('port'));
+	console.log('Server started on port '+ app.get('port'));
 });
+
+module.exports = app;

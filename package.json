@@ -4,13 +4,18 @@
   "description": "Simple authentication system",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
+  "keywords": [
+    "mocha",
+    "chai"
+  ],
   "author": "Niko",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "*",
     "body-parser": "*",
+    "chai": "^3.5.0",
     "connect-flash": "*",
     "cookie-parser": "^1.4.1",
     "express": "*",
@@ -18,11 +23,16 @@
     "express-messages": "*",
     "express-session": "*",
     "express-validator": "*",
+    "mocha": "^3.0.2",
     "mongodb": "*",
     "mongoose": "*",
     "multer": "^1.2.0",
     "passport": "*",
     "passport-http": "*",
     "passport-local": "*"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "chai-http": "^1.0.0"
   }
 }
