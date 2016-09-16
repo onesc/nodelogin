@@ -20,6 +20,9 @@ var UserSchema = mongoose.Schema({
 	imgpath: {
 		type: String
 	},
+	admin: {
+		type: Boolean, default: false
+	},
   images: [{ type: Schema.Types.ObjectId, ref: 'Image' }]
 });
 

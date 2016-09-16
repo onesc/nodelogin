@@ -10,7 +10,6 @@ var storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + Date.now() + imagetype);
   }
 });
-
 var upload = multer({
   storage: storage,
   fileFilter: function (req, file, cb) {
@@ -21,77 +20,108 @@ var upload = multer({
      }
 });
 
+function ensureAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  } else {
+    req.flash('error_msg', 'You are not logged in');
+    res.redirect('/users/login');
+  }
+}
+
+function ensureAdministrator(req, res, next){
+  if(req.isAuthenticated()){
+    if (req.user.admin === true){
+      return next();
+    } else {
+      req.flash('error_msg', 'You are not allowed to see that bro');
+      res.redirect('/');
+    }
+  } else {
+    req.flash('error_msg', 'You are not logged in');
+    res.redirect('/users/login');
+  }
+}
+
+
+
+
+
 var Painting = require('../models/Painting');
 
-router.get('/upload',function(req, res){
-  res.render('uploadpainting');
-});
-
 router.get('/',function(req, res){
-  var memes = Painting.getPaintings(function(paintings){
-    res.locals.paintings = paintings;
-    res.render('paintingindex');
+  ensureAdministrator(req, res, function(){
+    var memes = Painting.getPaintings(function(paintings){
+      res.locals.paintings = paintings;
+      res.render('paintingindex');
+    });
   });
 });
 
-// router.delete('/:id', function(req, res){
-//   var painting = Painting.deletePainting(req.params.id, function(){
-//     res.render('/');
-//   });
-// });
+
+router.get('/upload',function(req, res){
+  ensureAdministrator(req, res, function(){
+    res.render('uploadpainting');
+  });
+});
+
+
 
 router.post('/delete', function(req, res){
-  if (req.body.delete === "true") {
-    console.log("tried to delete");
-    Painting.deletePainting(req.body.id, function(){
-        res.redirect('/paintings');
-    });
-  }
-  console.log("meme");
+  ensureAdministrator(req, res, function(){
+    if (req.body.delete === "true") {
+      console.log("tried to delete");
+      Painting.deletePainting(req.body.id, function(){
+          res.redirect('/paintings');
+      });
+    }
+  });
 });
 
 router.get('/:id', function(req, res){
-  var painting = Painting.getPainting(req.params.id, function(image){
-    res.locals.painting = image[0];
-    console.log(image);
-    res.render('editpainting');
+  ensureAdministrator(req, res, function(){
+    var painting = Painting.getPainting(req.params.id, function(image){
+      res.locals.painting = image[0];
+      console.log(image);
+      res.render('editpainting');
+    });
+
   });
 });
 
 router.post('/edit', upload.any(), function(req, res){
-  var title = req.body.title;
-  var price = req.body.price;
-  var stocked = req.body.stocked;
-  var description = req.body.description;
-  var file = req.body.upload;
-  var id = req.body.id;
+  ensureAdministrator(req, res, function(){
 
-
-  var errors = req.validationErrors();
-  if(errors){
-        res.redirect('/upload');
-    } else {
-        paintingParams = {title: title, price: price, description: description};
-
-        Painting.updatePainting(id, paintingParams, function(err, painting){
-          if (err) throw err;
-          // console.log(painting);
-        });
-        req.flash('success_msg', 'You successfully edited the image');
-        res.redirect('/paintings/' + id);
-  }
-});
-
-router.post('/upload', upload.any(), function(req, res){
     var title = req.body.title;
     var price = req.body.price;
     var stocked = req.body.stocked;
     var description = req.body.description;
     var file = req.body.upload;
+    var id = req.body.id;
+    var errors = req.validationErrors();
+    if(errors){
+          res.redirect('/upload');
+      } else {
+          paintingParams = {title: title, price: price, description: description};
 
-    console.log(file);
+          Painting.updatePainting(id, paintingParams, function(err, painting){
+            if (err) throw err;
+            // console.log(painting);
+          });
+          req.flash('success_msg', 'You successfully edited the image');
+          res.redirect('/paintings/' + id);
+    }
 
+  });
+});
 
+router.post('/upload', upload.any(), function(req, res){
+  ensureAdministrator(req, res, function(){
+    var title = req.body.title;
+    var price = req.body.price;
+    var stocked = req.body.stocked;
+    var description = req.body.description;
+    var file = req.body.upload;
     var errors = req.validationErrors();
 
     if(errors){
@@ -114,55 +144,8 @@ router.post('/upload', upload.any(), function(req, res){
     }
 
     res.send("ayy" + req.files);
+  });
 });
-
-// router.post('/uploadimage', upload.any(), function(req, res){
-//   // // var name = req.body.name;
-//   // // var email = req.body.email;
-//   // // var username = req.body.username;
-//   // // var password = req.body.password;
-//   // // var password2 = req.body.password2;
-//   // // var file = req.body.upload;
-//   // console.log(req.files);
-//   // console.log("FILES BITCH");
-//   //
-//   // //validation
-//   // // req.checkBody('name', 'Name is required').notEmpty();
-//   // // req.checkBody('email', 'Email is required').notEmpty();
-//   // // req.checkBody('email', 'Email is not valid').isEmail();
-//   // // req.checkBody('username', 'Username is required').notEmpty();
-//   // // req.checkBody('password', 'Password is required').notEmpty();
-//   // // req.checykBody('password2', 'Passwords do not match').equals(req.body.password);
-//   var errors = req.validationErrors();
-//   var fileinvalid = false;
-//   console.log("meme");
-//   console.log("meme");
-//   console.log(req.files[0]);
-//   //
-//   // if((req.files[0].mimetype === "image/png") || (req.files[0].mimetype === "image/jpeg" || (req.files[0].mimetype === "image/gif"))) {
-//   //   console.log("validated the file");
-//   //   console.log("validated the file");
-//   //   fileinvalid = false;
-//   // }
-//
-//   if(errors || !req.files[0]){
-//       res.redirect('/image');
-//   } else {
-//       var newImage = new Image ({
-//         path: req.files[0].path.replace(/public/g,''),
-//         imagetype: req.files[0].mimetype,
-//         artistid: res.locals.user._id
-//       });
-//
-//       Image.createImage(newImage, function(err, user){
-//         if (err) throw err;
-//         console.log(user);
-//       });
-//
-//       req.flash('success_msg', 'Your image uploaded successfully');
-//       res.redirect('/image').send(req.files);
-//   }
-// });
 
 
 
