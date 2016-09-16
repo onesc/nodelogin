@@ -15,16 +15,17 @@
 
             <ul class="nav nav-pills pull-right">
               <li>{{user.name}}</li>
-              <li>{{meme}}</li>
 
               <li role="presentation"><a href="/">Dashboard</a></li>
               {{#if user}}
               <li role="presentation"><a href="/users/logout">Logout</a></li>
-              <li role="presentation"><a href="/users/register">Register</a></li>
-              <li role="presentation"><a href="/image">Images</a></li>
+              <li role="presentation"><a href="/image">Your Images</a></li>
               {{else}}
               <li role="presentation"><a href="/users/login">Login</a></li>
               <li role="presentation"><a href="/users/register">Register</a></li>
+              {{/if}}
+              {{#if user.admin}}
+              <li role="presentation"><a href="/paintings">Paintings</a></li>
               {{/if}}
 
             </ul>
