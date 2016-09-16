@@ -1,0 +1,16 @@
+{{#each paintings}}
+<h4> {{this.title}} </h4>
+<img src="{{this.imagepath}}" alt="" />
+<a href="/paintings/{{this.id}}"> Edit Painting </a>
+
+<hr>
+{{/each}}
+
+{{#if errors}}
+      {{#each errors}}
+        <div class="alert alert-danger">{{msg}}</div>
+      {{/each}}
+{{/if}}
+
+<hr>
+<a href="/paintings/upload"> Upload Painting </a>

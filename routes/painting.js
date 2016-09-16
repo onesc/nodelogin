@@ -24,18 +24,36 @@ var upload = multer({
 var Painting = require('../models/Painting');
 
 router.get('/upload',function(req, res){
-  // var memes = Image.getUsersImages(res.locals.user._id, function(paths){
-  //   res.locals.paths = paths;
-  //   res.render('myimages');
-  // });
   res.render('uploadpainting');
+});
+
+router.get('/',function(req, res){
+  var memes = Painting.getPaintings(function(paintings){
+    res.locals.paintings = paintings;
+    res.render('paintingindex');
+  });
+});
+
+// router.delete('/:id', function(req, res){
+//   var painting = Painting.deletePainting(req.params.id, function(){
+//     res.render('/');
+//   });
+// });
+
+router.post('/delete', function(req, res){
+  if (req.body.delete === "true") {
+    console.log("tried to delete");
+    Painting.deletePainting(req.body.id, function(){
+        res.redirect('/paintings');
+    });
+  }
+  console.log("meme");
 });
 
 router.get('/:id', function(req, res){
   var painting = Painting.getPainting(req.params.id, function(image){
     res.locals.painting = image[0];
     console.log(image);
-    // console.log(res.locals.painting);
     res.render('editpainting');
   });
 });
@@ -50,7 +68,6 @@ router.post('/edit', upload.any(), function(req, res){
 
 
   var errors = req.validationErrors();
-
   if(errors){
         res.redirect('/upload');
     } else {
@@ -63,7 +80,6 @@ router.post('/edit', upload.any(), function(req, res){
         req.flash('success_msg', 'You successfully edited the image');
         res.redirect('/paintings/' + id);
   }
-  
 });
 
 router.post('/upload', upload.any(), function(req, res){
@@ -94,7 +110,7 @@ router.post('/upload', upload.any(), function(req, res){
           });
 
           req.flash('success_msg', 'Your image uploaded successfully');
-          res.redirect('/painting').send(req.files);
+          res.redirect('/paintings').send(req.files);
     }
 
     res.send("ayy" + req.files);

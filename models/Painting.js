@@ -33,8 +33,12 @@ module.exports.createPainting = function(newPainting, callback){
 	        newPainting.save(callback);
 };
 
-module.exports.deletePainting = function(Painting, callback){
-	        newPainting.remove(callback);
+module.exports.deletePainting = function(paintingid, callback){
+	var painting =	Painting.find({_id: paintingid}).exec(function (err, paintingfound) {
+		if (err) return handleError(err);
+		paintingfound[0].remove();
+		callback();
+	});
 };
 
 module.exports.getPainting = function(paintingid, callback){
@@ -42,6 +46,14 @@ module.exports.getPainting = function(paintingid, callback){
 			    if (err) return handleError(err);
 			    callback(image);
 			  });
+};
+
+
+module.exports.getPaintings = function(callback){
+			var paintings = Painting.find().exec(function (err, paintings){
+				  if (err) return handleError(err);
+					callback(paintings);
+			});
 };
 
 module.exports.updatePainting = function(paintingid, paintingupdate, callback){
