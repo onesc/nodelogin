@@ -30,6 +30,21 @@
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
 
+<form action="/payments" method="POST">
+<input type="hidden" name="id" value="{{painting.id}}">
+  <script
+    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+    data-key=""
+    data-amount="999"
+    data-name="Demo Site"
+    data-description="Widget"
+    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+    data-locale="auto"
+    data-zip-code="true"
+    data-currency="aud">
+  </script>
+</form>
+
 <br>
 <br>
 

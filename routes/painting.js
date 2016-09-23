@@ -102,7 +102,7 @@ router.post('/edit', upload.any(), function(req, res){
     if(errors){
           res.redirect('/upload');
       } else {
-          paintingParams = {title: title, price: price, description: description};
+          paintingParams = {title: title, price: price, description: description, imagepath: req.files[0].path.replace(/public/g,'') };
 
           Painting.updatePainting(id, paintingParams, function(err, painting){
             if (err) throw err;

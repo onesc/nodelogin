@@ -19,6 +19,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var image = require('./routes/image');
 var painting = require('./routes/painting');
+var payments = require('./routes/payments');
 //
 // Init App
 var app = express();
@@ -83,6 +84,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/image', image);
 app.use('/paintings', painting);
+app.use('/payments', payments);
 
 // Set Port
 app.set('port', (process.env.PORT || 3001));
